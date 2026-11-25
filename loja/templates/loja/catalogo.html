@@ -1,0 +1,91 @@
+{% extends 'loja/base.html' %}
+{% block titulo %}Catálogo | Marketplace IESB{% endblock %}
+{% block conteudo %}
+<h1>Catálogo</h1>
+
+<form id="form-csrf">{% csrf_token %}</form>
+<p id="status">Carregando produtos...</p>
+<div id="grade" class="grade"></div>
+
+<script>
+  const contador = document.getElementById('contador');
+  const status = document.getElementById('status');
+  const grade = document.getElementById('grade');
+  const csrf = document.querySelector('#form-csrf [name=csrfmiddlewaretoken]').value;
+
+  // localStorage: apenas conveniência por navegador (o carrinho de verdade fica na sessão do servidor).
+  function lerContador() {
+    try {
+      return Number(localStorage.getItem('itensCarrinho') || 0);
+    } catch (e) {
+      return 0;
+    }
+  }
+
+  function gravarContador(n) {
+    try {
+      localStorage.setItem('itensCarrinho', String(n));
+    } catch (e) {
+      /* ignora */
+    }
+    contador.textContent = n;
+  }
+
+  contador.textContent = lerContador();
+
+  function adicionar(id) {
+    fetch('/carrinho/adicionar/' + id + '/', {
+      method: 'POST',
+      headers: { 'X-CSRFToken': csrf, 'X-Requested-With': 'fetch' }
+    })
+      .then(function (r) {
+        if (!r.ok) { throw new Error('HTTP ' + r.status); }
+        return r.json();
+      })
+      .then(function (dados) { gravarContador(dados.itens); })
+      .catch(function (e) {
+        alert('Não foi possível adicionar ao carrinho.');
+        console.error(e);
+      });
+  }
+
+  fetch('/api/produtos/')
+    .then(function (r) {
+      if (!r.ok) { throw new Error('HTTP ' + r.status); }
+      return r.json();
+    })
+    .then(function (produtos) {
+      if (produtos.length === 0) {
+        status.textContent = 'Nenhum produto cadastrado.';
+        return;
+      }
+      status.hidden = true;
+      produtos.forEach(function (p) {
+        const card = document.createElement('div');
+        card.className = 'card';
+
+        const titulo = document.createElement('h3');
+        titulo.textContent = p.nome;
+
+        const cat = document.createElement('small');
+        cat.textContent = p.categoria_nome;
+
+        const preco = document.createElement('p');
+        preco.className = 'preco';
+        preco.textContent = 'R$ ' + p.preco;
+
+        const botao = document.createElement('button');
+        botao.textContent = p.estoque > 0 ? 'Adicionar ao carrinho' : 'Sem estoque';
+        botao.disabled = p.estoque <= 0;
+        botao.addEventListener('click', function () { adicionar(p.id); });
+
+        [titulo, cat, preco, botao].forEach(function (el) { card.appendChild(el); });
+        grade.appendChild(card);
+    });
+    })
+    .catch(function (e) {
+    status.textContent = 'Não foi possível carregar o catálogo.';
+    console.error(e);
+    });
+</script>
+{% endblock %}
