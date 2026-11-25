@@ -17,8 +17,18 @@ IESB • Construção de Backend • Projeto 5 • Guia do Aluno • Página 21
 4. python manage.py createsuperuser
 5. python manage.py runserver
 ## Exemplo de chamada à API
-(cole aqui o JSON enviado em /api/pedidos/ e a resposta)
+Criar um pedido (logado, por exemplo pela API navegável em /api/pedidos/):
+{
+  "itens": [
+    { "produto": 1, "quantidade": 2 }
+  ]
+}
 ## Prints
-(catálogo, carrinho, Admin do vendedor)
+<img width="1056" height="492" alt="image" src="https://github.com/user-attachments/assets/dddb262e-ef72-4750-9bc0-b9432ea3e7ff" />
+<img width="1056" height="492" alt="image" src="https://github.com/user-attachments/assets/a7296e9a-88a1-4472-8d8e-3a48949b7dac" />
+<img width="1578" height="590" alt="image" src="https://github.com/user-attachments/assets/3fc4df0e-fa94-491e-8173-a10861e937ba" />
+
+
+
 ## Autor
 Sophia Silva — IESB 2026
