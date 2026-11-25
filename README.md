@@ -18,11 +18,13 @@ IESB • Construção de Backend • Projeto 5 • Guia do Aluno • Página 21
 5. python manage.py runserver
 ## Exemplo de chamada à API
 Criar um pedido (logado, por exemplo pela API navegável em /api/pedidos/):
+
 {
   "itens": [
     { "produto": 1, "quantidade": 2 }
   ]
 }
+
 ## Prints
 <img width="1056" height="492" alt="image" src="https://github.com/user-attachments/assets/dddb262e-ef72-4750-9bc0-b9432ea3e7ff" />
 <img width="1056" height="492" alt="image" src="https://github.com/user-attachments/assets/a7296e9a-88a1-4472-8d8e-3a48949b7dac" />
